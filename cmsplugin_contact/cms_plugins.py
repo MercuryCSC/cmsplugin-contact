@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.forms.fields import CharField
+from django.conf import settings
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
@@ -93,6 +94,8 @@ class ContactPlugin(CMSPluginBase):
 
 
     def send(self, form, site_email):
+        from_email = getattr(settings, 'DEFAULT_FROM_EMAIL')
+        
         subject = form.cleaned_data['subject']
         if not subject:
             subject = _('No subject')
@@ -103,7 +106,7 @@ class ContactPlugin(CMSPluginBase):
             render_to_string(self.email_template, {
                 'data': form.cleaned_data,
             }),
-            form.cleaned_data['email'],
+            from_email,
             [site_email],
             headers = {
                 'Reply-To': form.cleaned_data['email']
