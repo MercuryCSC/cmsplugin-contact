@@ -105,6 +105,7 @@ class ContactPlugin(CMSPluginBase):
             }).splitlines()[0],
             render_to_string(self.email_template, {
                 'data': form.cleaned_data,
+                'from_email': form.cleaned_data['email'],
             }),
             from_email,
             [site_email],
